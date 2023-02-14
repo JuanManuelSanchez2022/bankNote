@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+import statsmodels.api as sm
+import seaborn as sb
 
 data = pd.read_csv('Banknote-authentication-dataset-.csv')
 
@@ -9,7 +11,7 @@ v1 = data['V1']
 v2 = data['V2']
 v1v2 = np.column_stack((v1, v2))
 plt.scatter(v1,v2)
-km_res = KMeans(n_clusters=7).fit(v1v2)
+km_res = KMeans(n_clusters=3).fit(v1v2)
 
 print (min(v1))
 print (max(v1))
@@ -30,42 +32,36 @@ plt.scatter(v1,v2)
 plt.xlabel('V1')
 plt.ylabel('V2')
 
-plt.scatter(clusters[:,0],clusters[:,1], s=1000, alpha=0.5, color='w')
-
-# suppress warnings from final output
-
-
-import warnings
-warnings.simplefilter("ignore")
+plt.scatter(clusters[:,0],clusters[:,1], s=1000, alpha=0.5, color='b')
 
 #load data
 df = pd.read_csv('Banknote-authentication-dataset-.csv')
-#df_labels = pd.read_csv('data_with_labels.csv')
+#df_labels = pd.read_csv('Banknote-authentication-dataset-.csv')
 print(df)
 
+# set up to view all the info of the columns
+2
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
 
+df.head()
 
-from sklearn.datasets import make_blobs
+df.shape
 
-from sklearn.cluster import KMeans, SpectralClustering
+df.describe()
 
-n_iter = 9
-fig, ax = plt.subplots(3, 3, figsize=(16, 16))
-ax = np.ravel(ax)
-centers = []
-for i in range(n_iter):
-    # Run local implementation of kmeans
-    km = KMeans(n_clusters=2,
-                max_iter=3)
-    km.fit(data)
-    centroids = km.cluster_centers_
-    centers.append(centroids)
-    ax[i].scatter(data[km.labels_ == 0, 0], data[km.labels_ == 0, 1],
-                  label='cluster 1')
-    ax[i].scatter(data[km.labels_ == 1, 0], data[km.labels_ == 1, 1],
-                  label='cluster 2')
-    ax[i].scatter(centroids[:, 0], centroids[:, 1],
-                  c='r', marker='*', s=300, label='centroid')
-    ax[i].legend(loc='lower right')
-    ax[i].set_aspect('equal')
-plt.tight_layout()
+df.info()
+
+df[df.duplicated()].shape[0]
+
+sb.scatterplot(data=df, x='V1', y='V2')
+
+sb.kdeplot(v1, v2, shade=True)
+
+sb.set_style('whitegrid')
+
+sb.kdeplot(v1, v2,
+           shade=True,
+          shade_lowest=False,
+          cbar=True);
+
